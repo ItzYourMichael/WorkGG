@@ -4,8 +4,9 @@
     <title>Download Minecraft & Color Changing Website</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1d;
+            color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -16,29 +17,30 @@
         }
 
         h1 {
-            color: #333;
+            font-size: 24px;
             margin-bottom: 20px;
         }
 
         p {
-            color: #555;
+            font-size: 16px;
             margin-bottom: 30px;
+            text-align: center;
         }
 
         button {
-            padding: 10px 20px;
+            padding: 15px 30px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
-            background-color: #007bff;
-            color: white;
+            background-color: #4CAF50;
+            color: #fff;
             font-size: 16px;
             transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
 
         #colorChangeButton {
@@ -120,7 +122,7 @@
         });
 
         const colorChangeButton = document.getElementById('colorChangeButton');
-        const colors = ['#007bff', '#e83e8c', '#28a745', '#fd7e14', '#6610f2'];
+        const colors = ['#4CAF50', '#2196F3', '#FF5722', '#9C27B0', '#FF9800'];
         let index = 0;
 
         colorChangeButton.addEventListener('click', function () {
@@ -129,3 +131,4 @@
         });
     </script>
 </body>
+</html>
